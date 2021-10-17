@@ -8,6 +8,12 @@ class _InvalidCase:
 
 _INVALID_CASE = _InvalidCase()
 
+
+class _UndefinedEval:
+    """Sentinel object for defining when a switch statement has not been evaluated yet."""
+
+_UNDEFINED_EVAL = _UndefinedEval()
+
 _CASE_FLAG_NAME = "_is_case_method"
 
 
@@ -26,13 +32,14 @@ class switch:
     """
     Is a switch-case implementation.
 
-    Note: If a default value is defined before other values, it will always return before them no matter if they are
-    actually accepted or not.
+    Use by inheriting from this class, decorating case methods with
+    `case(predicate)`, and optionally decorating subclass with `resolve`
+    to evaluate the switch-case statement on first reference.
     """
 
     __slots__ = []
 
-    value: Any
+    _cached_eval = _UNDEFINED_EVAL
 
     @staticmethod
     def case(predicate):
@@ -54,6 +61,9 @@ class switch:
     @classmethod
     def eval(cls):
         """Resolves the switch statement, and returns the accepted case's returning value."""
+        if cls._cached_eval is not _UNDEFINED_EVAL:
+            return cls._cached_eval
+
         case_methods = [
             x
             for x in cls.__dict__.values()
@@ -62,5 +72,6 @@ class switch:
         for func in case_methods:
             result = func(cls)
             if result is not _INVALID_CASE:
+                cls._cached_eval = result
                 return result
         return None
