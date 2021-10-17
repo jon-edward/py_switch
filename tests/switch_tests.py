@@ -212,6 +212,14 @@ class SwitchTests(TestCase):
             "Evaluating a switch case multiple times will produce the same output instance.",
         )
 
+    def test_switch_statements_are_static(self):
+
+        class DummySwitch(switch):
+            pass
+
+        with self.assertRaises(TypeError):
+            DummySwitch()
+
 
 if __name__ == "__main__":
     main()
