@@ -220,6 +220,22 @@ class SwitchTests(TestCase):
         with self.assertRaises(TypeError):
             DummySwitch()
 
+    def test_switch_raises_error_with_invalid_case(self):
+
+        val = "unreachable"
+
+        with self.assertRaises(ValueError):
+
+            @resolve
+            class Dummy(switch):
+                @switch.case(val == 1)
+                def _option_one(self):
+                    return 1
+
+                @switch.case(val == 2)
+                def _option_two(self):
+                    return 2
+
 
 if __name__ == "__main__":
     main()
