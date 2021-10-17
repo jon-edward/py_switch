@@ -25,8 +25,8 @@ class SwitchTests(TestCase):
                 return "4"
 
         self.assertEqual(
-            S.eval(),
             "3",
+            S.eval(),
             "Inheriting from switch base class should allow the user to create "
             "switch-case statements.",
         )
@@ -71,8 +71,8 @@ class SwitchTests(TestCase):
                 return "vegetable"
 
         self.assertEqual(
-            ValClassification,
             "vegetable",
+            ValClassification,
             "Switch statements should allow the user to choose a default " "case.",
         )
 
@@ -115,8 +115,8 @@ class SwitchTests(TestCase):
                 return 5
 
         self.assertEqual(
-            ValFactor,
             3,
+            ValFactor,
             "Cases are evaluated in the order in which they are defined, and the first "
             "result that meets the predicate is returned before evaluating later ones.",
         )
