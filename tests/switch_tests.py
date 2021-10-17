@@ -105,6 +105,32 @@ class SwitchTests(TestCase):
         self.assertEqual(ValFactor, 3, "Cases are evaluated in the order in which they are defined, and the first "
                                        "result that meets the predicate is returned before evaluating later ones.")
 
+    def test_non_case_methods_working_on_switch_class(self):
+        from math import sqrt
+
+        val = 16
+
+        def is_square(v):
+            return sqrt(v) % 1 == 0
+
+        class ValIsPerfectSquare(switch):
+            @staticmethod
+            def is_perfect_square_tuple(value):
+                #  If this would be evaluated as a case it would return the tuple containing True and val,
+                #  which is tested for below with `assertTrue`.
+                return is_square(value), value
+
+            @switch.case(is_square(val))
+            def _square(self):
+                return True
+
+            @switch.case(default)
+            def _non_square(self):
+                return False
+
+        self.assertEqual((True, val), ValIsPerfectSquare.is_perfect_square_tuple(val))
+        self.assertTrue(ValIsPerfectSquare, "Non-case methods should not be evaluated as cases.")
+
 
 if __name__ == '__main__':
     main()
