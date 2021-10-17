@@ -76,7 +76,7 @@ class switch:
             if result is not _INVALID_CASE:
                 cls._cached_eval = result
                 return result
-        return None
+        raise ValueError("There is no case with a True predicate.")
 
     def __new__(cls, *args, **kwargs):
         raise TypeError(f"{cls} cannot be instantiated.")
