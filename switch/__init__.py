@@ -26,7 +26,7 @@ default = True
 
 
 def resolve(s: Type[switch]) -> Any:
-    """Decorator for auto-resolving switch statement when it is referenced, and returning the result."""
+    """Decorator for auto-resolving switch statement after its declaration."""
     return s.eval()
 
 
@@ -36,7 +36,7 @@ class switch:
 
     Use by inheriting from this class, decorating case methods with
     `case(predicate)`, and optionally decorating subclass with `resolve`
-    to evaluate the switch-case statement on first reference.
+    to evaluate the switch-case statement immediately after declaration.
     """
 
     __slots__ = []
