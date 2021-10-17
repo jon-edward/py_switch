@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Type, Any, TypeVar
 
 
 class _InvalidCase:
@@ -8,11 +9,18 @@ class _InvalidCase:
 
 _INVALID_CASE = _InvalidCase()
 
+_CASE_FLAG_NAME = "_is_case_method"
+
 
 #  A case is 'default' when its predicate is always true.
 #  Declaring a variable named 'default' is simply to increase
 #  readability for the user.
 default = True
+
+
+def resolve(s: Type[switch]) -> Any:
+    """Decorator for auto-resolving switch statement when it is referenced, and returning the result."""
+    return s.eval()
 
 
 class switch:
@@ -24,9 +32,7 @@ class switch:
     """
     __slots__ = []
 
-    def __call__(self, f: switch):
-        """This is called when `switch` is used as a decorator."""
-        return switch.eval(f)
+    value: Any
 
     @staticmethod
     def case(predicate):
@@ -39,16 +45,18 @@ class switch:
                     return _INVALID_CASE
                 result = function(*args, **kwargs)
                 return result
+            wrapper.__setattr__(_CASE_FLAG_NAME, True)
             return wrapper
         return decorator
 
-    def eval(self):
+    @classmethod
+    def eval(cls):
         """Resolves the switch statement, and returns the accepted case's returning value."""
-        functions = [
-            getattr(self, x) for x in self.__dict__ if
-            not x.startswith("__") and x != "value"
+        case_methods = [
+            x for x in cls.__dict__.values() if callable(x) and x.__dict__.get(_CASE_FLAG_NAME, False)
         ]
-        for func in functions:
-            result = func(self)
+        for func in case_methods:
+            result = func(cls)
             if result is not _INVALID_CASE:
                 return result
+        return None

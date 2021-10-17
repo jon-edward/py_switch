@@ -1,0 +1,110 @@
+from unittest import TestCase, main
+from switch import switch, default, resolve
+
+
+class SwitchTests(TestCase):
+
+    def test_simple_switch(self):
+
+        val = 3
+
+        class S(switch):
+            @switch.case(val == 1)
+            def _one(self):
+                return "1"
+
+            @switch.case(val == 2)
+            def _two(self):
+                return "2"
+
+            @switch.case(val == 3)
+            def _three(self):
+                return "3"
+
+            @switch.case(val == 4)
+            def _four(self):
+                return "4"
+
+        self.assertEqual(S.eval(), "3", "Inheriting from switch base class should allow the user to create "
+                                               "switch-case statements.")
+
+    def test_automatic_switch_resolution(self):
+
+        val = 5
+
+        @resolve
+        class ValIsEven(switch):
+            @switch.case(val % 2 == 0)
+            def _even(self):
+                return True
+
+            @switch.case(val % 2 == 1)
+            def _odd(self):
+                return False
+
+        self.assertFalse(ValIsEven, "Decorating a child of the switch parent class with 'resolve' should "
+                                    "automatically resolve the statements to its appropriate value when referencing "
+                                    "the class.")
+
+    def test_default_functionality(self):
+
+        val = "broccoli"
+
+        @resolve
+        class ValClassification(switch):
+            @switch.case(val == "apple")
+            def _apple(self):
+                return "fruit"
+
+            @switch.case(val == "pear")
+            def _pear(self):
+                return "fruit"
+
+            @switch.case(default)
+            def _vegetable(self):
+                return "vegetable"
+
+        self.assertEqual(ValClassification, "vegetable", "Switch statements should allow the user to choose a default "
+                                                         "case.")
+
+    def test_defaults_coming_before_others(self):
+        #  Potential gotcha.
+
+        val = -1
+
+        @resolve
+        class ValIsPositive(switch):
+            @switch.case(default)
+            def _always_true(self):
+                return True
+
+            @switch.case(val < 0)
+            def _never_reached(self):
+                return False
+
+        self.assertTrue(ValIsPositive, "Default cases are evaluated first if they come first, order is significant.")
+
+    def test_order_is_greedy(self):
+
+        val = 15
+
+        @resolve
+        class ValFactor(switch):
+            @switch.case(val % 2 == 0)
+            def _2_factor(self):
+                return 2
+
+            @switch.case(val % 3 == 0)
+            def _3_factor(self):
+                return 3
+
+            @switch.case(val % 5 == 0)
+            def _5_factor(self):
+                return 5
+
+        self.assertEqual(ValFactor, 3, "Cases are evaluated in the order in which they are defined, and the first "
+                                       "result that meets the predicate is returned before evaluating later ones.")
+
+
+if __name__ == '__main__':
+    main()
