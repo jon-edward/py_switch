@@ -73,7 +73,7 @@ class SwitchTests(TestCase):
         self.assertEqual(
             "vegetable",
             ValClassification,
-            "Switch statements should allow the user to choose a default " "case.",
+            "Switch statements should allow the user to choose a default case.",
         )
 
     def test_defaults_coming_before_others(self):
