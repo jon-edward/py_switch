@@ -12,7 +12,9 @@ _INVALID_CASE = _InvalidCase()
 class _UndefinedEval:
     """Sentinel object for defining when a switch statement has not been evaluated yet."""
 
+
 _UNDEFINED_EVAL = _UndefinedEval()
+
 
 _CASE_FLAG_NAME = "_is_case_method"
 
