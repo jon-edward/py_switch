@@ -3,7 +3,6 @@ from switch import switch, default, resolve
 
 
 class SwitchTests(TestCase):
-
     def test_simple_switch(self):
 
         val = 3
@@ -25,8 +24,12 @@ class SwitchTests(TestCase):
             def _four(self):
                 return "4"
 
-        self.assertEqual(S.eval(), "3", "Inheriting from switch base class should allow the user to create "
-                                               "switch-case statements.")
+        self.assertEqual(
+            S.eval(),
+            "3",
+            "Inheriting from switch base class should allow the user to create "
+            "switch-case statements.",
+        )
 
     def test_automatic_switch_resolution(self):
 
@@ -42,9 +45,12 @@ class SwitchTests(TestCase):
             def _odd(self):
                 return False
 
-        self.assertFalse(ValIsEven, "Decorating a child of the switch parent class with 'resolve' should "
-                                    "automatically resolve the statements to its appropriate value when referencing "
-                                    "the class.")
+        self.assertFalse(
+            ValIsEven,
+            "Decorating a child of the switch parent class with 'resolve' should "
+            "automatically resolve the statements to its appropriate value when referencing "
+            "the class.",
+        )
 
     def test_default_functionality(self):
 
@@ -64,8 +70,11 @@ class SwitchTests(TestCase):
             def _vegetable(self):
                 return "vegetable"
 
-        self.assertEqual(ValClassification, "vegetable", "Switch statements should allow the user to choose a default "
-                                                         "case.")
+        self.assertEqual(
+            ValClassification,
+            "vegetable",
+            "Switch statements should allow the user to choose a default " "case.",
+        )
 
     def test_defaults_coming_before_others(self):
         #  Potential gotcha.
@@ -82,7 +91,10 @@ class SwitchTests(TestCase):
             def _never_reached(self):
                 return False
 
-        self.assertTrue(ValIsPositive, "Default cases are evaluated first if they come first, order is significant.")
+        self.assertTrue(
+            ValIsPositive,
+            "Default cases are evaluated first if they come first, order is significant.",
+        )
 
     def test_order_is_greedy(self):
 
@@ -102,8 +114,12 @@ class SwitchTests(TestCase):
             def _5_factor(self):
                 return 5
 
-        self.assertEqual(ValFactor, 3, "Cases are evaluated in the order in which they are defined, and the first "
-                                       "result that meets the predicate is returned before evaluating later ones.")
+        self.assertEqual(
+            ValFactor,
+            3,
+            "Cases are evaluated in the order in which they are defined, and the first "
+            "result that meets the predicate is returned before evaluating later ones.",
+        )
 
     def test_non_case_methods_working_on_switch_class(self):
         from math import sqrt
@@ -129,8 +145,10 @@ class SwitchTests(TestCase):
                 return False
 
         self.assertEqual((True, val), ValIsPerfectSquare.is_perfect_square_tuple(val))
-        self.assertTrue(ValIsPerfectSquare, "Non-case methods should not be evaluated as cases.")
+        self.assertTrue(
+            ValIsPerfectSquare, "Non-case methods should not be evaluated as cases."
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

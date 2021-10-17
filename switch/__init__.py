@@ -1,10 +1,9 @@
 from __future__ import annotations
-from typing import Type, Any, TypeVar
+from typing import Type, Any
 
 
 class _InvalidCase:
     """Sentinel object for defining when a case is not met."""
-    pass
 
 
 _INVALID_CASE = _InvalidCase()
@@ -30,6 +29,7 @@ class switch:
     Note: If a default value is defined before other values, it will always return before them no matter if they are
     actually accepted or not.
     """
+
     __slots__ = []
 
     value: Any
@@ -45,15 +45,19 @@ class switch:
                     return _INVALID_CASE
                 result = function(*args, **kwargs)
                 return result
+
             wrapper.__setattr__(_CASE_FLAG_NAME, True)
             return wrapper
+
         return decorator
 
     @classmethod
     def eval(cls):
         """Resolves the switch statement, and returns the accepted case's returning value."""
         case_methods = [
-            x for x in cls.__dict__.values() if callable(x) and x.__dict__.get(_CASE_FLAG_NAME, False)
+            x
+            for x in cls.__dict__.values()
+            if callable(x) and x.__dict__.get(_CASE_FLAG_NAME, False)
         ]
         for func in case_methods:
             result = func(cls)
