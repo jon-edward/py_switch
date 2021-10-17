@@ -149,6 +149,35 @@ class SwitchTests(TestCase):
             ValIsPerfectSquare, "Non-case methods should not be evaluated as cases."
         )
 
+    def test_can_get_evaluated_switch_result_multiple_times(self):
+
+        val = "four"
+
+        @resolve
+        class ValToInteger(switch):
+            @switch.case(val == "one")
+            def one(self):
+                return 1
+
+            @switch.case(val == "two")
+            def two(self):
+                return 2
+
+            @switch.case(val == "three")
+            def three(self):
+                return 3
+
+            @switch.case(val == "four")
+            def four(self):
+                return 4
+
+            @switch.case(default)
+            def _(self):
+                return -1
+
+        self.assertEqual(4, ValToInteger, "Switch case results can be referenced multiple times.")
+        self.assertEqual(4, ValToInteger)
+
 
 if __name__ == "__main__":
     main()
