@@ -77,3 +77,6 @@ class switch:
                 cls._cached_eval = result
                 return result
         return None
+
+    def __new__(cls, *args, **kwargs):
+        raise TypeError(f"{cls} cannot be instantiated.")
