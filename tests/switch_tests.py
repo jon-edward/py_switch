@@ -178,6 +178,39 @@ class SwitchTests(TestCase):
         self.assertEqual(4, ValToInteger, "Switch case results can be referenced multiple times.")
         self.assertEqual(4, ValToInteger)
 
+    def test_evaluated_switch_statements_should_cache_result(self):
+
+        val = 2
+
+        class Object_1:
+            pass
+
+        class Object_2:
+            pass
+
+        class Object_3:
+            pass
+
+        class ObjectInstance(switch):
+            @switch.case(val == 1)
+            def _object_1_instance(self):
+                return Object_1()
+
+            @switch.case(val == 2)
+            def _object_2_instance(self):
+                return Object_2()
+
+            @switch.case(val == 3)
+            def _object_3_instance(self):
+                return Object_3()
+
+        object_instance = ObjectInstance.eval()
+
+        self.assertIs(
+            object_instance,
+            ObjectInstance.eval(),
+            "Evaluating a switch case multiple times will produce the same output instance."
+        )
 
 if __name__ == "__main__":
     main()
